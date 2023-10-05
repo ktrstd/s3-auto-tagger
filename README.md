@@ -8,11 +8,12 @@ ChatGPIで、ファイルの内容を解析し、適切なタグを生成して�
 
 ## Terraform実行に必要な事前作業
 
-## 前提作業
+### 前提作業
 - terraformのCLIがインストール済みであること
 - AWSのIAMとそのアクセスキーを作成していること
 - OpenAPIのAPIの取得していること
 
+### 変数ファイル編集
 terraformのvalues.yamlにAPI KEYなどの必要な情報を追記します。
 
 ```
@@ -50,7 +51,17 @@ terraform apply
 terraform destroy
 ```
 
-## python ディレクトリの作成方法
+## Python環境
+
+自動タグ付与するプログラムはPythonで記述しており、AWS LambdaのPython 3.10 実行している。
+
+### 構成
+
+* python/lambda_function.py: AWS Lambdaで実行するコード
+* python/* : Pythonのモジュール群
+* lambda_function_payload.zip: AWS Lambdaを構築する際に、アップロードする pythonディレクトリをZIPで圧縮したファイル
+
+### python ディレクトリの作成方法
 
 AWS Lamdbaで実行するPythonのライブラリの追加が必要な場合は、以下を参考に追加してください。
 
@@ -79,7 +90,7 @@ export LOCAL_DEBUG="True"
 python3 python/lambda_function.py
 ```
 
-# S3アップロード スクリプト
+## S3アップロード スクリプト
 
 * s3_upload_file.py を利用してローカルのファイルをS3にアップロードできます
 
@@ -100,7 +111,7 @@ sample.md を [yourbuckt]/test/sample.md にアップロードしました。
 upload: .\sample.md to s3://${UPLOAD_BUKET}/test/sample.md
 ```
 
-# タグの確認方法
+## タグの確認方法
 
 aws cliでS3のオブジェクトに、タグが付与されているか確認する事ができます。
 ```
